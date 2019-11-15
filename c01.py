@@ -20,7 +20,6 @@ class Atrybut:
             try:
                 self.data = list(map(float, data))
             except ValueError:
-                print("Błąd: atrybut " + name + " nie jest typu numerycznego!")
                 self.attribute_type = Atrybut.AttributeType.s
 
     def is_symbolic(self):
