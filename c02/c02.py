@@ -1,6 +1,7 @@
 import glob
 import os
 import math
+import random
 
 class ObiektSystemuDecyzyjnego:
     def __init__(self, data):
@@ -90,7 +91,12 @@ class KlasyfikatorBayesa:
                 index = index + 1
             lista_prawdopodobienstw[klasa] = p_czesciowe
             lista_prawdopodobienstw[klasa] = lista_prawdopodobienstw[klasa] * prawdopodobienstwa_klas[klasa]
-        return max(lista_prawdopodobienstw, key=lista_prawdopodobienstw.get)
+        highest_probabilities_classes = []
+        highest_probability_value = max(lista_prawdopodobienstw.values())
+        for prawdopodobienstwo_klasy in lista_prawdopodobienstw:
+            if lista_prawdopodobienstw[prawdopodobienstwo_klasy] == highest_probability_value:
+                highest_probabilities_classes.append(prawdopodobienstwo_klasy)
+        return random.choice(highest_probabilities_classes)
 
 # main
 
