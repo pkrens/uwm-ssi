@@ -99,51 +99,51 @@ class KlasyfikatorBayesa:
         return random.choice(highest_probabilities_classes)
 
 # main
+if __name__ == "__main__":
+    system_TRN_handle = open("./c02/australian_TRN.txt")
+    system_TST_handle = open("./c02/australian_TST.txt")
+    system_TRN = system_TRN_handle.readlines()
+    system_TST = system_TST_handle.readlines()
+    klasyfikator = KlasyfikatorBayesa(system_TRN)
 
-system_TRN_handle = open("./c02/australian_TRN.txt")
-system_TST_handle = open("./c02/australian_TST.txt")
-system_TRN = system_TRN_handle.readlines()
-system_TST = system_TST_handle.readlines()
-klasyfikator = KlasyfikatorBayesa(system_TRN)
+    correct_amount = {}
+    overall_amount = {}
+    wyniki = []
 
-correct_amount = {}
-overall_amount = {}
-wyniki = []
+    for obiekt_do_klasyfikacji in system_TST:
+        wynik = klasyfikator.klasyfikuj(obiekt_do_klasyfikacji.strip().split(' ')[:-1])
+        prawidlowa_klasa = obiekt_do_klasyfikacji.strip()[-1]
+        if prawidlowa_klasa not in overall_amount:
+            correct_amount[prawidlowa_klasa] = 0
+            overall_amount[prawidlowa_klasa] = 0
+        overall_amount[prawidlowa_klasa] += 1
+        if wynik == prawidlowa_klasa:
+            correct_amount[prawidlowa_klasa] += 1
+        wyniki.append(wynik)
 
-for obiekt_do_klasyfikacji in system_TST:
-    wynik = klasyfikator.klasyfikuj(obiekt_do_klasyfikacji.strip().split(' ')[:-1])
-    prawidlowa_klasa = obiekt_do_klasyfikacji.strip()[-1]
-    if prawidlowa_klasa not in overall_amount:
-        correct_amount[prawidlowa_klasa] = 0
-        overall_amount[prawidlowa_klasa] = 0
-    overall_amount[prawidlowa_klasa] += 1
-    if wynik == prawidlowa_klasa:
-        correct_amount[prawidlowa_klasa] += 1
-    wyniki.append(wynik)
+    liczba_klas = len(overall_amount)
+    suma_licznika_bal_acc = 0
+    suma_licznika_glob_acc = 0
+    wszystkie_obiekty = 0
+    for klasa in correct_amount:
+        suma_licznika_bal_acc += correct_amount[klasa] / overall_amount[klasa]
+        suma_licznika_glob_acc += correct_amount[klasa]
+        wszystkie_obiekty += overall_amount[klasa]
+    balanced_accuraty = suma_licznika_bal_acc / liczba_klas
+    global_accuraty = suma_licznika_glob_acc / wszystkie_obiekty
+    print('Balanced Acc = ', balanced_accuraty)
+    print('Global Acc = ', global_accuraty)
 
-liczba_klas = len(overall_amount)
-suma_licznika_bal_acc = 0
-suma_licznika_glob_acc = 0
-wszystkie_obiekty = 0
-for klasa in correct_amount:
-    suma_licznika_bal_acc += correct_amount[klasa] / overall_amount[klasa]
-    suma_licznika_glob_acc += correct_amount[klasa]
-    wszystkie_obiekty += overall_amount[klasa]
-balanced_accuraty = suma_licznika_bal_acc / liczba_klas
-global_accuraty = suma_licznika_glob_acc / wszystkie_obiekty
-print('Balanced Acc = ', balanced_accuraty)
-print('Global Acc = ', global_accuraty)
+    file = open('dec_bayes.txt', 'w')
+    for wynik in wyniki:
+        file.write(wynik)
+        file.write('\n')
+    file.close()
 
-file = open('dec_bayes.txt', 'w')
-for wynik in wyniki:
-    file.write(wynik)
+    file = open('acc_bayes.txt', 'w')
+    file.write('Global Acc = ')
+    file.write(str(global_accuraty))
     file.write('\n')
-file.close()
-
-file = open('acc_bayes.txt', 'w')
-file.write('Global Acc = ')
-file.write(str(global_accuraty))
-file.write('\n')
-file.write('Balanced Acc = ')
-file.write(str(balanced_accuraty))
-file.close()
+    file.write('Balanced Acc = ')
+    file.write(str(balanced_accuraty))
+    file.close()
