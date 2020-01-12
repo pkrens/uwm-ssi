@@ -27,8 +27,7 @@ def losuj_bez_zwracania(data, ilosc):
     return elements_to_return, data_manipulated
 
 def losuj_ze_zwracaniem(data, ilosc):
-    data_manipulated = data[:]
-    data_length = len(data_manipulated)
+    data_length = len(data)
     elements_to_return = []
     indexes = []
     data_to_return = []
@@ -36,10 +35,10 @@ def losuj_ze_zwracaniem(data, ilosc):
         random_index = random.randint(0, data_length - 1)
         indexes.append(random_index)
     for index in indexes:
-        elements_to_return.append(data_manipulated[index])
+        elements_to_return.append(data[index])
     for i in range(data_length):
         if i not in indexes:
-            data_to_return.append(data_manipulated[index])
+            data_to_return.append(data[i])
     return elements_to_return, data_to_return
 
 def train_and_test(data, test_size):
@@ -122,9 +121,11 @@ def bootstrap(data):
     return results_matrix
 
 def bagging(data, folds):
+    data_modified = data[:]
+    random.shuffle(data_modified)
     results_array = []
     for _ in range(folds):
-        results_array.append(bootstrap(data))
+        results_array.append(bootstrap(data_modified))
     return results_array
 
 def get_accuraties_single(matrix):
